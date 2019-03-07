@@ -1,11 +1,10 @@
 <p align="center">
   <a href="https://www.bitvavo.com"><img src="https://bitvavo.com/media/images/logo/bitvavoGeneral.svg" width="600" title="Bitvavo Logo">
+  <br>
+  <br>
+  <a href="https://github.com/bitvavo/java-bitvavo-api.git" alt="Downloads">
+  <img src="https://img.shields.io/github/downloads/bitvavo/java-bitvavo-api/total.svg?style=flat-square" /></a>
 </p>
-<br>
-
-[![npm downloads](https://img.shields.io/github/downloads/bitvavo/PHP-bitvavo-api/total.svg)](https://github.com/bitvavo/PHP-bitvavo-api.git)
-[![GitHub followers](https://img.shields.io/github/followers/bitvavo.svg?label=Follow&style=social)](https://github.com/bitvavo)
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c623a741dc96dc58d215)
 
 # PHP Bitvavo API
 This is the PHP wrapper for the Bitvavo API. This project can be used to build your own projects which interact with the Bitvavo platform. Every function available on the API can be called through a REST request or over websockets. For info on the specifics of every parameter consult the [documentation](https://docs.bitvavo.com/)
