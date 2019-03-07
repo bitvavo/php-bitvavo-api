@@ -2,8 +2,8 @@
   <a href="https://www.bitvavo.com"><img src="https://bitvavo.com/media/images/logo/bitvavoGeneral.svg" width="600" title="Bitvavo Logo">
   <br>
   <br>
-  <a href="https://github.com/bitvavo/java-bitvavo-api.git" alt="Downloads">
-  <img src="https://img.shields.io/github/downloads/bitvavo/java-bitvavo-api/total.svg?style=flat-square" /></a>
+  <a href="https://github.com/bitvavo/php-bitvavo-api.git" alt="Downloads">
+  <img src="https://img.shields.io/github/downloads/bitvavo/php-bitvavo-api/total.svg?style=flat-square" /></a>
 </p>
 
 # PHP Bitvavo API
