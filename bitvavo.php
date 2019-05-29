@@ -115,6 +115,26 @@ class Bitvavo {
 
   function sendPublic($url, $params, $method, $data) {
     $curl = createCurl($url, $method, $params);
+    $endpoint = str_replace(array($this->base), array(''), $url);
+    if ($this->apiKey != "") {
+      $now = (time()*1000);
+      $query = http_build_query($params, '', '&');
+      if (count($params) > 0) {
+        $endpointParams = $endpoint . '?' . $query;
+      } else {
+        $endpointParams = $endpoint;
+      }
+      $sig = createSignature($now, $method, $endpointParams, [], $this->apiSecret);
+      $headers = array(
+        'Bitvavo-Access-Key: ' . $this->apiKey,
+        'Bitvavo-Access-Signature: ' . $sig,
+        'Bitvavo-Access-Timestamp: ' . (string)$now,
+        'Bitvavo-Access-Window: ' . (string)$this->accessWindow,
+        'Content-Type: application/json'
+      );
+      echo implode(',', $headers);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    }
     $output = curl_exec($curl);
     $json = json_decode($output, true);
     return $json;
