@@ -217,6 +217,9 @@ function testWebsocket($websock) {
   // $websock->subscriptionTicker("BTC-EUR", function($response) {
   //   echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
   // });
+  // $websock->subscriptionTicker24h("BTC-EUR", function($response) {
+  //   echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
+  // });
   // $websock->subscriptionAccount("BTC-EUR", function($response) {
   //   echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
   // });

@@ -13,6 +13,9 @@ function copyCallbacks($newSock, $oldSock) {
   if(isset($oldSock->subscriptionTickerCallback)) {
     $newSock->subscriptionTickerCallback = $oldSock->subscriptionTickerCallback;
   }
+  if(isset($oldSock->subscriptionTicker24hCallback)) {
+    $newSock->subscriptionTicker24hCallback = $oldSock->subscriptionTicker24hCallback;
+  }
   if(isset($oldSock->subscriptionAccountCallback)) {
     $newSock->subscriptionAccountCallback = $oldSock->subscriptionAccountCallback;
   }
@@ -132,7 +135,6 @@ class Bitvavo {
         'Bitvavo-Access-Window: ' . (string)$this->accessWindow,
         'Content-Type: application/json'
       );
-      echo implode(',', $headers);
       curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     }
     $output = curl_exec($curl);
@@ -189,7 +191,7 @@ class Bitvavo {
     return $this->sendPublic($this->base . "/" . $symbol . "/book", $options, "GET", "");
   }
 
-  // options: limit, start, end, tradeId
+  // options: limit, start, end, tradeIdFrom, tradeIdTo
   public function publicTrades($symbol, $options) {
     return $this->sendPublic($this->base . "/" . $symbol . "/trades", $options, "GET", "");
   }
@@ -241,7 +243,7 @@ class Bitvavo {
     return $this->sendPrivate("/order", $options, [], "DELETE", $this->apiSecret, $this->base, $this->apiKey);
   }
 
-  // options: orderId, limit, start, end
+  // options: limit, start, end, orderIdFrom, orderIdTo
   public function getOrders($market, $options) {
     $options["market"] = $market;
     return $this->sendPrivate("/orders", $options, [], "GET", $this->apiSecret, $this->base, $this->apiKey);
@@ -257,7 +259,7 @@ class Bitvavo {
     return $this->sendPrivate("/ordersOpen", $options, [], "GET", $this->apiSecret, $this->base, $this->apiKey);
   }
 
-  // options: limit, start, end, tradeId
+  // options: limit, start, end, tradeIdFrom, tradeIdTo
   public function trades($market, $options) {
     $options["market"] = $market;
     return $this->sendPrivate("/trades", $options, [], "GET", $this->apiSecret, $this->base, $this->apiKey);
@@ -384,7 +386,7 @@ class Websocket {
     $loop = React\EventLoop\Factory::create();
     $reactConnector = new React\Socket\Connector($loop, []);
     $connector = new Ratchet\Client\Connector($loop, $reactConnector);
-
+    
     $connector('wss://ws.bitvavo.com/v2/')->then(function(Ratchet\Client\WebSocket $conn) {
 
       $this->reconnectTimer = 1;
@@ -534,6 +536,11 @@ class Websocket {
         case "ticker":
           call_user_func($this->subscriptionTickerCallback[$jsonResponse["market"]], $jsonResponse);
           break;
+        case "ticker24h":
+          foreach ($jsonResponse["data"] as $entry) {
+            call_user_func($this->subscriptionTicker24hCallback[$entry["market"]], $entry);
+          }
+          break;
         case "book":
           if (isset($this->subscriptionBookCallback[$jsonResponse["market"]])) {
             $this->addToBook($jsonResponse, false);
@@ -623,7 +630,7 @@ class Websocket {
     $this->sendPublic($options);
   }
 
-  // options: limit, start, end
+  // options: limit, start, end, tradeIdFrom, tradeIdTo
   public function publicTrades($market, $options, callable $callback) {
     $this->publicTradesCallback = $callback;
     $options["market"] = $market;
@@ -691,7 +698,7 @@ class Websocket {
     $this->sendPrivate(["market" => $market, "orderId" => $orderId, "action" => "privateCancelOrder"]);
   }
 
-  // options: orderId, limit, start, end
+  // options: limit, start, end, orderIdFrom, orderIdTo
   public function getOrders($market, $options, callable $callback) {
     $this->getOrdersCallback = $callback;
     $options["market"] = $market;
@@ -713,7 +720,7 @@ class Websocket {
     $this->sendPrivate($options);
   }
 
-  // options: limit, start, end, tradeId
+  // options: limit, start, end, tradeIdFrom, tradeIdTo
   public function trades($market, $options, callable $callback) {
     $this->tradesCallback = $callback;
     $options["market"] = $market;
@@ -761,6 +768,11 @@ class Websocket {
   public function subscriptionTicker($market, callable $callback) {
     $this->subscriptionTickerCallback[$market] = $callback;
     $this->sendPublic(["action" => "subscribe", "channels" => [["name" => "ticker", "markets" => [$market]]]]);
+  }
+
+  public function subscriptionTicker24h($market, callable $callback) {
+    $this->subscriptionTicker24hCallback[$market] = $callback;
+    $this->sendPublic(["action" => "subscribe", "channels" => [["name" => "ticker24h", "markets" => [$market]]]]);
   }
 
   public function subscriptionAccount($market, callable $callback) {

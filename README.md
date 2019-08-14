@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="https://www.bitvavo.com"><img src="https://bitvavo.com/media/images/logo/bitvavoGeneral.svg" width="600" title="Bitvavo Logo"></a>
+  <a href="https://bitvavo.com"><img src="https://bitvavo.com/media/images/logo/bitvavoGeneral.svg" width="600" title="Bitvavo Logo"></a>
 </p>
 
 # PHP Bitvavo API
-This is the PHP wrapper for the Bitvavo API. This project can be used to build your own projects which interact with the Bitvavo platform. Every function available on the API can be called through a REST request or over websockets. For info on the specifics of every parameter consult the [documentation](https://docs.bitvavo.com/)
+This is the PHP wrapper for the Bitvavo API. This project can be used to build your own projects which interact with the Bitvavo platform. Every function available on the API can be called through a REST request or over websockets. For info on the specifics of every parameter consult the [Bitvavo API documentation](https://docs.bitvavo.com/)
 
 * Getting started       [REST](https://github.com/bitvavo/php-bitvavo-api#getting-started) [Websocket](https://github.com/bitvavo/php-bitvavo-api#getting-started-1)
 * General
@@ -33,6 +33,7 @@ This is the PHP wrapper for the Bitvavo API. This project can be used to build y
   * Withdrawal History  [REST](https://github.com/bitvavo/php-bitvavo-api#get-withdrawal-history) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-withdrawal-history-1)
 * [Subscriptions](https://github.com/bitvavo/php-bitvavo-api#subscriptions)
   * [Ticker Subscription](https://github.com/bitvavo/php-bitvavo-api#ticker-subscription)
+  * [Ticker 24 Hour Subscription](https://github.com/bitvavo/php-bitvavo-api#ticker-24-hour-subscription)
   * [Account Subscription](https://github.com/bitvavo/php-bitvavo-api#account-subscription)
   * [Candles Subscription](https://github.com/bitvavo/php-bitvavo-api#candles-subscription)
   * [Trades Subscription](https://github.com/bitvavo/php-bitvavo-api#trades-subscription)
@@ -293,7 +294,7 @@ echo json_encode($response) . "\n";
 
 #### Get trades per market
 ```PHP
-// options: limit, start, end, tradeId
+// options: limit, start, end, tradeIdFrom, tradeIdTo
 foreach ($bitvavo->publicTrades("BTC-EUR", []) as $trade) {
   echo json_encode($trade) . "\n";
 }
@@ -466,44 +467,46 @@ foreach ($bitvavo->tickerBook([]) as $book) {
 
 ```PHP
 {
-    "market": "ELF-EUR",
-    "bid": "0.085428",
-    "ask": "0.085928"
+    "market": "XVG-BTC",
+    "bid": "0.00000045",
+    "ask": "0.00000046",
+    "bidSize": "28815.01275017",
+    "askSize": "38392.85089495"
 }
 {
-    "market": "ICX-EUR",
-    "bid": "0.17641",
-    "ask": "0.17696"
+    "market": "XVG-EUR",
+    "bid": "0.0042213",
+    "ask": "0.0043277",
+    "bidSize": "1695671.24837763",
+    "askSize": "792229.47382889"
 }
 {
-    "market": "LTC-EUR",
-    "bid": "26.746",
-    "ask": "26.79"
-}
-{
-    "market": "NAS-EUR",
-    "bid": "0.45603",
-    "ask": "0.45798"
+    "market": "ZIL-BTC",
+    "bid": "0.00000082",
+    "ask": "0.00000083",
+    "bidSize": "140980.13397262",
+    "askSize": "98839.99285373"
 }
 {
     "market": "ZIL-EUR",
-    "bid": "0.018",
-    "ask": "0.018115"
+    "bid": "0.0076923",
+    "ask": "0.0077929",
+    "bidSize": "348008.13304576",
+    "askSize": "151544.09942432"
+}
+{
+    "market": "ZRX-BTC",
+    "bid": "0.00001679",
+    "ask": "0.0000168",
+    "bidSize": "633.12153002",
+    "askSize": "1280.07668593"
 }
 {
     "market": "ZRX-EUR",
-    "bid": "0.21999",
-    "ask": "0.22087"
-}
-{
-    "market": "XRP-EUR",
-    "bid": "0.25216",
-    "ask": "0.25251"
-}
-{
-    "market": "BTC-EUR",
-    "bid": "2998.2",
-    "ask": "2998.3"
+    "bid": "0.1575",
+    "ask": "0.15774",
+    "bidSize": "875.01315351",
+    "askSize": "1013.62085819"
 }
 ...
 ```
@@ -521,40 +524,46 @@ foreach ($bitvavo->ticker24h([]) as $ticker) {
 
 ```PHP
 {
-  "market": "AE-BTC",
-  "open": "0.00010658",
-  "high": "0.00010658",
-  "low": "0.00010658",
-  "last": "0.00010658",
-  "volume": "2",
-  "volumeQuote": "0.00021316"
+    "market": "XVG-EUR",
+    "open": "0.0043222",
+    "high": "0.0044139",
+    "low": "0.0040849",
+    "last": "0.0041952",
+    "volume": "1237140.82971657",
+    "volumeQuote": "5267.56",
+    "bid": "0.0042245",
+    "bidSize": "1704411.59895476",
+    "ask": "0.0043217",
+    "askSize": "2419888.08209617",
+    "timestamp": 1565777160307
 }
 {
-  "market": "AION-BTC",
-  "open": "0.000034026",
-  "high": "0.000034026",
-  "low": "0.000034026",
-  "last": "0.000034026",
-  "volume": "2",
-  "volumeQuote": "0.00006805"
+    "market": "ZIL-EUR",
+    "open": "0.008125",
+    "high": "0.0082359",
+    "low": "0.0076094",
+    "last": "0.0077285",
+    "volume": "738574.75091114",
+    "volumeQuote": "5724.92",
+    "bid": "0.007698",
+    "bidSize": "347552.37282041",
+    "ask": "0.0077977",
+    "askSize": "151544.09942432",
+    "timestamp": 1565777159934
 }
 {
-  "market": "ANT-BTC",
-  "open": "0.00010822",
-  "high": "0.00010822",
-  "low": "0.00010822",
-  "last": "0.00010822",
-  "volume": "2",
-  "volumeQuote": "0.00021644"
-}
-{
-  "market": "ARK-BTC",
-  "open": "0.00009327",
-  "high": "0.00009327",
-  "low": "0.00009327",
-  "last": "0.00009327",
-  "volume": "2",
-  "volumeQuote": "0.00018654"
+    "market": "ZRX-EUR",
+    "open": "0.16326",
+    "high": "0.16326",
+    "low": "0.15812",
+    "last": "0.15858",
+    "volume": "4855.99528525",
+    "volumeQuote": "779.72",
+    "bid": "0.15748",
+    "bidSize": "874.65298311",
+    "ask": "0.15775",
+    "askSize": "545.84965752",
+    "timestamp": 1565777159932
 }
 ...
 ```
@@ -691,7 +700,7 @@ echo json_encode($response) . "\n";
 #### Get orders
 Returns the same as get order, but can be used to return multiple orders at once.
 ```PHP
-// options: orderId, limit, start, end
+// options: limit, start, end, orderIdFrom, orderIdTo
 foreach ($bitvavo->getOrders("BTC-EUR", []) as $order) {
   echo json_encode($order) . "\n";
 }
@@ -895,7 +904,7 @@ foreach ($bitvavo->ordersOpen([]) as $order) {
 #### Get trades
 Returns all trades within a market for this account.
 ```PHP
-// options: limit, start, end, tradeId
+// options: limit, start, end, tradeIdFrom, tradeIdTo
 foreach ($bitvavo->trades("BTC-EUR", []) as $trade) {
   echo json_encode($trade) . "\n";
 }
@@ -1123,7 +1132,7 @@ foreach ($bitvavo->withdrawalHistory([]) as $withdrawal) {
 
 ## Websockets
 
-All requests which can be done through REST requests can also be performed over websockets. Bitvavo also provides five [subscriptions](https://github.com/bitvavo/php-bitvavo-api#subscriptions). If subscribed to these, updates specific for that type/market are pushed immediately. Our experience with php is that it performs slightly worse than our other SDK's, therefore we recommend to implement programs, which require constant synchronisation with the exchange, in another language. For simple operations or any functions integrated into a website php suffices.
+All requests which can be done through REST requests can also be performed over websockets. Bitvavo also provides six [subscriptions](https://github.com/bitvavo/php-bitvavo-api#subscriptions). If subscribed to these, updates specific for that type/market are pushed immediately. Our experience with php is that it performs slightly worse than our other SDK's, therefore we recommend to implement programs, which require constant synchronisation with the exchange, in another language. For simple operations or any functions integrated into a website php suffices.
 
 ### Getting started
 
@@ -1555,44 +1564,46 @@ $websock->tickerBook([], function($response) {
 
 ```PHP
 {
-    "market": "ELF-EUR",
-    "bid": "0.085428",
-    "ask": "0.085928"
+    "market": "XVG-BTC",
+    "bid": "0.00000045",
+    "ask": "0.00000046",
+    "bidSize": "28815.01275017",
+    "askSize": "38392.85089495"
 }
 {
-    "market": "ICX-EUR",
-    "bid": "0.17641",
-    "ask": "0.17696"
+    "market": "XVG-EUR",
+    "bid": "0.0042213",
+    "ask": "0.0043277",
+    "bidSize": "1695671.24837763",
+    "askSize": "792229.47382889"
 }
 {
-    "market": "LTC-EUR",
-    "bid": "26.746",
-    "ask": "26.79"
-}
-{
-    "market": "NAS-EUR",
-    "bid": "0.45603",
-    "ask": "0.45798"
+    "market": "ZIL-BTC",
+    "bid": "0.00000082",
+    "ask": "0.00000083",
+    "bidSize": "140980.13397262",
+    "askSize": "98839.99285373"
 }
 {
     "market": "ZIL-EUR",
-    "bid": "0.018",
-    "ask": "0.018115"
+    "bid": "0.0076923",
+    "ask": "0.0077929",
+    "bidSize": "348008.13304576",
+    "askSize": "151544.09942432"
+}
+{
+    "market": "ZRX-BTC",
+    "bid": "0.00001679",
+    "ask": "0.0000168",
+    "bidSize": "633.12153002",
+    "askSize": "1280.07668593"
 }
 {
     "market": "ZRX-EUR",
-    "bid": "0.21999",
-    "ask": "0.22087"
-}
-{
-    "market": "XRP-EUR",
-    "bid": "0.25216",
-    "ask": "0.25251"
-}
-{
-    "market": "BTC-EUR",
-    "bid": "2998.2",
-    "ask": "2998.3"
+    "bid": "0.1575",
+    "ask": "0.15774",
+    "bidSize": "875.01315351",
+    "askSize": "1013.62085819"
 }
 ...
 ```
@@ -1612,40 +1623,46 @@ $websock->ticker24h([], function($response) {
 
 ```PHP
 {
-  "market": "AE-BTC",
-  "open": "0.00010658",
-  "high": "0.00010658",
-  "low": "0.00010658",
-  "last": "0.00010658",
-  "volume": "2",
-  "volumeQuote": "0.00021316"
+    "market": "XVG-EUR",
+    "open": "0.0043222",
+    "high": "0.0044139",
+    "low": "0.0040849",
+    "last": "0.0041952",
+    "volume": "1237140.82971657",
+    "volumeQuote": "5267.56",
+    "bid": "0.0042245",
+    "bidSize": "1704411.59895476",
+    "ask": "0.0043217",
+    "askSize": "2419888.08209617",
+    "timestamp": 1565777160307
 }
 {
-  "market": "AION-BTC",
-  "open": "0.000034026",
-  "high": "0.000034026",
-  "low": "0.000034026",
-  "last": "0.000034026",
-  "volume": "2",
-  "volumeQuote": "0.00006805"
+    "market": "ZIL-EUR",
+    "open": "0.008125",
+    "high": "0.0082359",
+    "low": "0.0076094",
+    "last": "0.0077285",
+    "volume": "738574.75091114",
+    "volumeQuote": "5724.92",
+    "bid": "0.007698",
+    "bidSize": "347552.37282041",
+    "ask": "0.0077977",
+    "askSize": "151544.09942432",
+    "timestamp": 1565777159934
 }
 {
-  "market": "ANT-BTC",
-  "open": "0.00010822",
-  "high": "0.00010822",
-  "low": "0.00010822",
-  "last": "0.00010822",
-  "volume": "2",
-  "volumeQuote": "0.00021644"
-}
-{
-  "market": "ARK-BTC",
-  "open": "0.00009327",
-  "high": "0.00009327",
-  "low": "0.00009327",
-  "last": "0.00009327",
-  "volume": "2",
-  "volumeQuote": "0.00018654"
+    "market": "ZRX-EUR",
+    "open": "0.16326",
+    "high": "0.16326",
+    "low": "0.15812",
+    "last": "0.15858",
+    "volume": "4855.99528525",
+    "volumeQuote": "779.72",
+    "bid": "0.15748",
+    "bidSize": "874.65298311",
+    "ask": "0.15775",
+    "askSize": "545.84965752",
+    "timestamp": 1565777159932
 }
 ...
 ```
@@ -1786,7 +1803,7 @@ $websock->cancelOrder("BTC-EUR", "68322e0d-1a41-4e39-bc26-8c9b9a268a81", functio
 #### Get orders
 Returns the same as get order, but can be used to return multiple orders at once.
 ```PHP
-// options: orderId, limit, start, end
+// options: limit, start, end, orderIdFrom, orderIdTo
 $websock->getOrders("BTC-EUR", [], function($response) {
   foreach ($response as $order) {
     echo json_encode($order) . "\n";
@@ -1996,7 +2013,7 @@ $websock->ordersOpen([], function($response) {
 #### Get trades
 Returns all trades within a market for this account.
 ```PHP
-// options: limit, start, end, tradeId
+// options: limit, start, end, tradeIdFrom, tradeIdTo
 $websock->trades("BTC-EUR", [], function($response) {
   foreach ($response as $trade) {
     echo json_encode($trade) . "\n";
@@ -2248,7 +2265,37 @@ $websock->subscriptionTicker("BTC-EUR", function($response) {
 {
     "event": "ticker",
     "market": "BTC-EUR",
-    "bestBid": "2991.9"
+    "bestAsk": "9410.1",
+    "bestAskSize": "0.10847628",
+    "lastPrice": "9335"
+}
+```
+</details>
+
+#### Ticker 24 hour subscription
+Updated ticker24h objects are sent on this channel once per second. A ticker24h object is considered updated if one of the values besides timestamp has changed.
+```PHP
+$websock->subscriptionTicker24h("BTC-EUR", function($response) {
+  echo json_encode($response) . "\n";
+});
+```
+<details>
+ <summary>View Response</summary>
+
+```PHP
+{
+    "market": "BTC-EUR",
+    "open": "10061",
+    "high": "10061",
+    "low": "9265.4",
+    "last": "9400.3",
+    "volume": "309.30172822",
+    "volumeQuote": "2993760.89",
+    "bid": "9400.1",
+    "bidSize": "0.10576468",
+    "ask": "9400.4",
+    "askSize": "0.10858821",
+    "timestamp": 1565777506453
 }
 ```
 </details>
