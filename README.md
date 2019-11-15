@@ -48,7 +48,7 @@ Get the package and it's dependencies:
 
 Run the example:
 
-`cd vendor\bitvavo\php-bitvavo-api\example`
+`cd vendor/bitvavo/php-bitvavo-api/example`
 
 `php example.php`
 
