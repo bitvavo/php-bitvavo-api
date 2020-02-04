@@ -1,5 +1,6 @@
 <p align="center">
-  <a href="https://bitvavo.com"><img src="https://bitvavo.com/media/images/logo/bitvavoGeneral.svg" width="600" title="Bitvavo Logo"></a>
+  <br>
+  <a href="https://bitvavo.com"><img src="https://bitvavo.com/assets/static/ext/logo-shape.svg" width="100" title="Bitvavo Logo">
 </p>
 
 # PHP Bitvavo API
@@ -185,6 +186,9 @@ foreach ($bitvavo->assets([]) as $asset) {
     "withdrawalFee": "0.2",
     "withdrawalMinAmount": "0.2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -197,6 +201,9 @@ foreach ($bitvavo->assets([]) as $asset) {
     "withdrawalFee": "2",
     "withdrawalMinAmount": "2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -209,6 +216,9 @@ foreach ($bitvavo->assets([]) as $asset) {
     "withdrawalFee": "3",
     "withdrawalMinAmount": "3",
     "withdrawalStatus": "",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -221,6 +231,9 @@ foreach ($bitvavo->assets([]) as $asset) {
     "withdrawalFee": "2",
     "withdrawalMinAmount": "2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 ...
@@ -1277,6 +1290,9 @@ $websock->assets([], function($response) {
     "withdrawalFee": "0.2",
     "withdrawalMinAmount": "0.2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -1289,6 +1305,9 @@ $websock->assets([], function($response) {
     "withdrawalFee": "2",
     "withdrawalMinAmount": "2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -1301,6 +1320,9 @@ $websock->assets([], function($response) {
     "withdrawalFee": "3",
     "withdrawalMinAmount": "3",
     "withdrawalStatus": "",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 {
@@ -1313,6 +1335,9 @@ $websock->assets([], function($response) {
     "withdrawalFee": "2",
     "withdrawalMinAmount": "2",
     "withdrawalStatus": "OK",
+    "networks": [
+        "Mainnet"
+    ],
     "message": ""
 }
 ...

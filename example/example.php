@@ -15,6 +15,8 @@ function main() {
   $bitvavo = new Bitvavo([
     "APIKEY" => "<APIKEY>", 
     "APISECRET" => "<APISECRET>",
+    "RESTURL" => "https://api.bitvavo.com/v2",
+    "WSURL" => "wss://ws.bitvavo.com/v2/",
     "ACCESSWINDOW" => 10000,
     "DEBUGGING" => false
   ]);  

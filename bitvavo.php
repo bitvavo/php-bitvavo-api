@@ -68,11 +68,12 @@ function errorToConsole($message) {
 
 class Bitvavo {
   public function __construct($options) {
-    $this->base = "https://api.bitvavo.com/v2";
     $apiKeySet = false;
     $apiSecretSet = false;
     $accessWindowSet = false;
     $debuggingSet = false;
+    $restUrlSet = false;
+    $wsUrlSet = false;
     foreach ($options as $key => $value) {
       if(strtolower($key) == "apikey") {
         $this->apiKey = $value;
@@ -86,6 +87,12 @@ class Bitvavo {
       } else if(strtolower($key) == "debugging") {
         $this->debugging = (bool)$value;
         $debuggingSet = true;
+      } else if(strtolower($key) === 'resturl') {
+        $this->base = $value;
+        $restUrlSet = true;
+      } else if(strtolower($key) === 'wsurl') {
+        $this->wsurl = $value;
+        $wsUrlSet = true;
       }
     }
     if(!$apiKeySet) {
@@ -99,6 +106,12 @@ class Bitvavo {
     }
     if(!$debuggingSet) {
       $this->debugging = false;
+    }
+    if(!$restUrlSet) {
+      $this->base = "https://api.bitvavo.com/v2";
+    }
+    if(!$wsUrlSet) {
+      $this->wsurl = "wss://ws.bitvavo.com/v2/";
     }
   }
 
@@ -342,6 +355,7 @@ function sortAndInsert($update, $book, $sortFunc) {
 class Websocket {
   public function __construct($bitvavo = null, $reconnect = false, $publicCommandArray, $privateCommandArray, $oldSocket) {
     $this->parent = $bitvavo;
+    $this->wsurl = $bitvavo->wsurl;
     $this->apiKey = $bitvavo->apiKey;
     $this->apiSecret = $bitvavo->apiSecret;
     $this->accessWindow = $bitvavo->accessWindow;
@@ -387,7 +401,7 @@ class Websocket {
     $reactConnector = new React\Socket\Connector($loop, []);
     $connector = new Ratchet\Client\Connector($loop, $reactConnector);
     
-    $connector('wss://ws.bitvavo.com/v2/')->then(function(Ratchet\Client\WebSocket $conn) {
+    $connector($this->wsurl)->then(function(Ratchet\Client\WebSocket $conn) {
 
       $this->reconnectTimer = 1;
       $this->conn = $conn;
