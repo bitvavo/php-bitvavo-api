@@ -60,13 +60,15 @@ The general convention used in all functions (both REST and websockets), is that
 
 ### Getting started
 
-The API key and secret are required for private calls and optional for public calls. The access window and debugging parameter are optional for all calls. The access window is used to determine whether the request arrived within time, the value is specified in milliseconds. You can use the [time](https://github.com/bitvavo/php-bitvavo-api#get-time) function to synchronize your time to our server time if errors arise. Debugging should be set to true when you want to log additional information and full responses. Any parameter can be omitted, private functions will return an error when the api key and secret have not been set.
+The API key and secret are required for private calls and optional for public calls. The access window and debugging parameter are optional for all calls. The access window is used to determine whether the request arrived within time, the value is specified in milliseconds. You can use the [time](https://github.com/bitvavo/php-bitvavo-api#get-time) function to synchronize your time to our server time if errors arise. REST url and WS url can be used to set a different endpoint (for testing purposes). Debugging should be set to true when you want to log additional information and full responses. Any parameter can be omitted, private functions will return an error when the api key and secret have not been set.
 ```PHP
 require_once('bitvavo.php');
 
 $bitvavo = new Bitvavo([
   "APIKEY" => "<APIKEY>", 
   "APISECRET" => "<APISECRET>",
+  "RESTURL" => "https://api.bitvavo.com/v2",
+  "WSURL" => "wss://ws.bitvavo.com/v2/",
   "ACCESSWINDOW" => 10000,
   "DEBUGGING" => false
 ]);
