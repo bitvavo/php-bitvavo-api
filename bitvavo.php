@@ -40,25 +40,6 @@ function createSignature($timestamp, $method, $url, $body, $apiSecret) {
   return $signature;
 }
 
-function createCurl($url, $method, $params) {
-  $curl = curl_init();
-  if( $method == "GET") {
-    curl_setopt($curl, CURLOPT_HTTPGET, true);
-  } else if($method == "POST") {
-    curl_setopt($curl, CURLOPT_POST, true);
-  } else if($method == "DELETE") {
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-  }
-  $query = http_build_query($params, '', '&');
-  if (count($params) > 0) {
-    curl_setopt($curl, CURLOPT_URL, $url .'?' . $query);
-  } else {
-    curl_setopt($curl, CURLOPT_URL, $url);
-  }
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  return $curl;
-}
-
 function errorToConsole($message) {
   if (is_array($message)) {
     $message = implode(',', $message);
@@ -129,8 +110,27 @@ class Bitvavo {
     }
   }
 
+  function createCurl($url, $method, $params) {
+    $curl = curl_init();
+    if( $method == "GET") {
+      curl_setopt($curl, CURLOPT_HTTPGET, true);
+    } else if($method == "POST") {
+      curl_setopt($curl, CURLOPT_POST, true);
+    } else if($method == "DELETE") {
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+    }
+    $query = http_build_query($params, '', '&');
+    if (count($params) > 0) {
+      curl_setopt($curl, CURLOPT_URL, $url .'?' . $query);
+    } else {
+      curl_setopt($curl, CURLOPT_URL, $url);
+    }
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    return $curl;
+  }
+
   function sendPublic($url, $params, $method, $data) {
-    $curl = createCurl($url, $method, $params);
+    $curl = $this->createCurl($url, $method, $params);
     $endpoint = str_replace(array($this->base), array(''), $url);
     if ($this->apiKey != "") {
       $now = (time()*1000);
@@ -164,7 +164,7 @@ class Bitvavo {
       $endpointParams = $endpoint;
     }
     $sig = createSignature($now, $method, $endpointParams, $body, $apiSecret);
-    $curl = createCurl($base . $endpoint, $method, $params);
+    $curl = $this->createCurl($base . $endpoint, $method, $params);
     $headers = array(
       'Bitvavo-Access-Key: ' . $apiKey,
       'Bitvavo-Access-Signature: ' . $sig,
@@ -439,14 +439,16 @@ class Websocket {
       $this->localBook[$msg["market"]]["nonce"] = $msg["nonce"];
       call_user_func($this->subscriptionBookCallback[$msg["market"]], $this->localBook[$msg["market"]]);
     } else {
-      if($msg["nonce"] != $this->localBook[$msg["market"]]["nonce"] + 1) {
-        $this->subscriptionBook($msg["market"], $this->subscriptionBookCallback[$msg["market"]]);
-        return;
+      if (isset($this->localBook[$msg["market"]]["nonce"])) {
+        if($msg["nonce"] != $this->localBook[$msg["market"]]["nonce"] + 1) {
+          $this->subscriptionBook($msg["market"], $this->subscriptionBookCallback[$msg["market"]]);
+          return;
+        }
+        $this->localBook[$msg["market"]]["bids"] = sortAndInsert($msg["bids"], $this->localBook[$msg["market"]]["bids"], "sortBids");
+        $this->localBook[$msg["market"]]["asks"] = sortAndInsert($msg["asks"], $this->localBook[$msg["market"]]["asks"], "sortAsks");
+        $this->localBook[$msg["market"]]["nonce"] = $msg["nonce"];
+        call_user_func($this->subscriptionBookCallback[$msg["market"]], $this->localBook[$msg["market"]]);
       }
-      $this->localBook[$msg["market"]]["bids"] = sortAndInsert($msg["bids"], $this->localBook[$msg["market"]]["bids"], "sortBids");
-      $this->localBook[$msg["market"]]["asks"] = sortAndInsert($msg["asks"], $this->localBook[$msg["market"]]["asks"], "sortAsks");
-      $this->localBook[$msg["market"]]["nonce"] = $msg["nonce"];
-      call_user_func($this->subscriptionBookCallback[$msg["market"]], $this->localBook[$msg["market"]]);
     }
     return;
   }
