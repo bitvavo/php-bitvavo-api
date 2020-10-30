@@ -27,6 +27,7 @@ This is the PHP wrapper for the Bitvavo API. This project can be used to build y
   * Cancel Orders       [REST](https://github.com/bitvavo/php-bitvavo-api#cancel-orders) [Websocket](https://github.com/bitvavo/php-bitvavo-api#cancel-orders-1)
   * Orders Open         [REST](https://github.com/bitvavo/php-bitvavo-api#get-orders-open) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-orders-open-1)
   * Trades              [REST](https://github.com/bitvavo/php-bitvavo-api#get-trades) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-trades-1)
+  * Account             [REST](https://github.com/bitvavo/php-bitvavo-api#get-account) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-account-1)
   * Balance             [REST](https://github.com/bitvavo/php-bitvavo-api#get-balance) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-balance-1)
   * Deposit Assets     [REST](https://github.com/bitvavo/php-bitvavo-api#deposit-assets) [Websocket](https://github.com/bitvavo/php-bitvavo-api#deposit-assets-1)
   * Withdraw Assets   [REST](https://github.com/bitvavo/php-bitvavo-api#withdraw-assets) [Websocket](https://github.com/bitvavo/php-bitvavo-api#withdraw-assets-1)
@@ -590,7 +591,9 @@ foreach ($bitvavo->ticker24h([]) as $ticker) {
 When placing an order, make sure that the correct optional parameters are set. For a limit order it is required to set both the amount and price. A market order is valid if either the amount or the amountQuote has been set.
 ```PHP
 // optional parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection),
-// both: timeInForce, selfTradePrevention, responseRequired
+//                      stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+//                      stopLossLimit/takeProfitLimit:(amount, price, postOnly, triggerType, triggerReference, triggerAmount)
+//                      all orderTypes: timeInForce, selfTradePrevention, responseRequired
 $response = $bitvavo->placeOrder("BTC-EUR", "buy", "limit", ["amount" => "1", "price" => "2000"]);
 echo json_encode($response) . "\n";
 ```
@@ -628,7 +631,8 @@ echo json_encode($response) . "\n";
 When updating an order make sure that at least one of the optional parameters has been set. Otherwise nothing can be updated.
 ```PHP
 // Optional parameters: limit:(amount, amountRemaining, price, timeInForce, selfTradePrevention, postOnly)
-// (set at least 1) (responseRequired can be set as well, but does not update anything)
+//          untriggered stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+//                      stopLossLimit/takeProfitLimit: (amount, price, postOnly, triggerType, triggerReference, triggerAmount)
 $response = $bitvavo->updateOrder("BTC-EUR", "97d89ffc-2339-4e8f-8032-bf7b8c9ee65b", ["amount" => "1.1"]);
 echo json_encode($response) . "\n";
 ```
@@ -977,6 +981,26 @@ foreach ($bitvavo->trades("BTC-EUR", []) as $trade) {
     "settled": true
 }
  ...
+```
+</details>
+
+#### Get account
+Returns the fee tier for this account.
+```PHP
+$response = $bitvavo->account();
+echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
+```
+<details>
+ <summary>View Response</summary>
+
+```PHP
+{
+  "fees": {
+    "taker": "0.0025",
+    "maker": "0.0015",
+    "volume": "100.00"
+  }
+}
 ```
 </details>
 
@@ -1701,7 +1725,9 @@ $websock->ticker24h([], function($response) {
 When placing an order, make sure that the correct optional parameters are set. For a limit order it is required to set both the amount and price. A market order is valid if either the amount or the amountQuote has been set.
 ```PHP
 // optional parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection),
-// both: timeInForce, selfTradePrevention, responseRequired
+//                      stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+//                      stopLossLimit/takeProfitLimit:(amount, price, postOnly, triggerType, triggerReference, triggerAmount)
+//                      all orderTypes: timeInForce, selfTradePrevention, responseRequired
 $websock->placeOrder("BTC-EUR", "buy", "limit", ["amount" => "0.1", "price" => "5000"], function($response) {
   echo json_encode($response) . "\n";
 });
@@ -1740,7 +1766,8 @@ $websock->placeOrder("BTC-EUR", "buy", "limit", ["amount" => "0.1", "price" => "
 When updating an order make sure that at least one of the optional parameters has been set. Otherwise nothing can be updated.
 ```PHP
 // Optional parameters: limit:(amount, amountRemaining, price, timeInForce, selfTradePrevention, postOnly)
-// (set at least 1) (responseRequired can be set as well, but does not update anything)
+//          untriggered stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+//                      stopLossLimit/takeProfitLimit: (amount, price, postOnly, triggerType, triggerReference, triggerAmount)
 $websock->updateOrder("BTC-EUR", "68322e0d-1a41-4e39-bc26-8c9b9a268a81", ["amount" => "0.2"], function($response) {
   echo json_encode($response) . "\n";
 });
@@ -2100,6 +2127,27 @@ $websock->trades("BTC-EUR", [], function($response) {
     "settled": true
 }
  ...
+```
+</details>
+
+#### Get account
+Returns the fee tier for this account.
+```PHP
+$websock->account(function($response) {
+  echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
+});
+```
+<details>
+ <summary>View Response</summary>
+
+```PHP
+{
+  "fees": {
+    "taker": "0.0025",
+    "maker": "0.0015",
+    "volume": "100.00"
+  }
+}
 ```
 </details>
 

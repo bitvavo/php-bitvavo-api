@@ -66,6 +66,8 @@ function testREST($bitvavo) {
 
   // $response = $bitvavo->placeOrder("BTC-EUR", "buy", "limit", ["amount" => "1", "price" => "2000"]);
   // echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
+  // $response = $bitvavo->placeOrder("BTC-EUR", "sell", "stopLoss", ["amount" => "0.1", "triggerType" => "price", "triggerReference" => "lastTrade", "triggerAmount" => "5000"]);
+  // echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
 
   // $response = $bitvavo->getOrder("BTC-EUR", "db985cbc-70dd-4afd-a9ff-9ba363efab70");
   // echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
@@ -93,6 +95,8 @@ function testREST($bitvavo) {
   //   echo json_encode($trade, JSON_PRETTY_PRINT) . "\n";
   // }
 
+  // $response = $bitvavo->account();
+  // echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
 
   // foreach ($bitvavo->balance([]) as $balance) {
   //   echo json_encode($balance, JSON_PRETTY_PRINT) . "\n";
@@ -194,6 +198,9 @@ function testWebsocket($websock) {
   //   }
   // });
 
+  // $websock->account(function($response) {
+  //   echo json_encode($response, JSON_PRETTY_PRINT) . "\n";
+  // });
   // $websock->balance([], function($response) {
   //   foreach ($response as $balance) {
   //     echo json_encode($balance, JSON_PRETTY_PRINT) . "\n";

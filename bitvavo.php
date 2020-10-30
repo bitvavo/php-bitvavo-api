@@ -230,7 +230,10 @@ class Bitvavo {
     return $this->sendPublic($this->base . "/ticker/24h", $options, "GET", "");
   }
 
-  // optional body parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection), both: timeInForce, selfTradePrevention, responseRequired
+  // optional body parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection)
+  //                           stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+  //                           stopLossLimit/takeProfitLimit:(amount, price, postOnly, triggerType, triggerReference, triggerAmount)
+  //                           all orderTypes: timeInForce, selfTradePrevention, responseRequired
   public function placeOrder($market, $side, $orderType, $body) {
     $body["market"] = $market;
     $body["side"] = $side;
@@ -244,7 +247,8 @@ class Bitvavo {
   }
 
   // Optional body parameters: limit:(amount, amountRemaining, price, timeInForce, selfTradePrevention, postOnly)
-  // (set at least 1) (responseRequired can be set as well, but does not update anything)
+  //               untriggered stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+  //                           stopLossLimit/takeProfitLimit: (amount, price, postOnly, triggerType, triggerReference, triggerAmount)
   public function updateOrder($market, $orderId, $body) {
     $body["market"] = $market;
     $body["orderId"] = $orderId;
@@ -276,6 +280,10 @@ class Bitvavo {
   public function trades($market, $options) {
     $options["market"] = $market;
     return $this->sendPrivate("/trades", $options, [], "GET", $this->apiSecret, $this->base, $this->apiKey);
+  }
+
+  public function account() {
+    return $this->sendPrivate("/account", [], [], "GET", $this->apiSecret, $this->base, $this->apiKey);
   }
 
   // options: symbol
@@ -518,6 +526,9 @@ class Websocket {
         case "privateGetTrades":
           call_user_func($this->tradesCallback, $jsonResponse["response"]);
           break;
+        case "privateGetAccount":
+          call_user_func($this->accountCallback, $jsonResponse["response"]);
+        break;
         case "privateGetBalance":
           call_user_func($this->balanceCallback, $jsonResponse["response"]);
           break;
@@ -684,7 +695,10 @@ class Websocket {
     $this->sendPublic($options);
   }
 
-  // optional body parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection), both: timeInForce, selfTradePrevention, responseRequired
+  // optional body parameters: limit:(amount, price, postOnly), market:(amount, amountQuote, disableMarketProtection)
+  //                           stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+  //                           stopLossLimit/takeProfitLimit:(amount, price, postOnly, triggerType, triggerReference, triggerAmount)
+  //                           all orderTypes: timeInForce, selfTradePrevention, responseRequired
   public function placeOrder($market, $side, $orderType, $body, callable $callback) {
     $this->placeOrderCallback = $callback;
     $body["action"] = "privateCreateOrder";
@@ -700,7 +714,8 @@ class Websocket {
   }
 
   // Optional body parameters: limit:(amount, amountRemaining, price, timeInForce, selfTradePrevention, postOnly)
-  // (set at least 1) (responseRequired can be set as well, but does not update anything)
+  //               untriggered stopLoss/takeProfit:(amount, amountQuote, disableMarketProtection, triggerType, triggerReference, triggerAmount)
+  //                           stopLossLimit/takeProfitLimit: (amount, price, postOnly, triggerType, triggerReference, triggerAmount)
   public function updateOrder($market, $orderId, $body, callable $callback) {
     $body["market"] = $market;
     $body["orderId"] = $orderId;
@@ -742,6 +757,11 @@ class Websocket {
     $options["market"] = $market;
     $options["action"] = "privateGetTrades";
     $this->sendPrivate($options);
+  }
+
+  public function account(callable $callback) {
+    $this->accountCallback = $callback;
+    $this->sendPrivate(["action" => "privateGetAccount"]);
   }
 
   // options: symbol
