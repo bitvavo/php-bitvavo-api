@@ -84,6 +84,33 @@ $currentTime = $response["time"];
 echo $currentTime
 ```
 
+#### Rate limiting
+
+After every request [rate limits](https://docs.bitvavo.com/#section/Rate-limiting) are remembered, and can be subsequentially acquired by following method `$bitvavo->getRatelimit($key);`. Key can be one of `limit`, `remaining`, or `resetat`. Here is an example code to that you can use to achieve high throughput without hitting a ban:
+
+```
+function handleRateimiting($bitvavo) {
+  $remaining = $bitvavo->getRatelimit('remaining');
+
+  if (empty($remaining) || $remaining > 200) {
+    return;
+  }
+
+  $resetat = $$bitvavo->getRatelimit('resetat');
+  $resetat *= 1000;
+  $now = time() * 1000000;
+  $delay = $resetat - $now;
+
+  // If the last request has been done a while ago.
+  if ($delay <= 0) {
+    return;
+  }
+
+  // Have to use usleep() for sub-second resolution.
+  usleep($delay);
+}
+```
+
 ### General
 
 #### Get time
