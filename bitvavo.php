@@ -879,5 +879,3 @@ class Websocket {
     $this->sendPublic(["action" => "getBook", "market" => $market]);
   }
 }
-
-?>
