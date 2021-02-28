@@ -86,7 +86,7 @@ echo $currentTime
 
 ### Rate limiting
 
-After every request [rate limits](https://docs.bitvavo.com/#section/Rate-limiting) are remembered, and can be subsequentially acquired by following method `$bitvavo->getRatelimit($key);`. Key can be one of `limit`, `remaining`, or `resetat`. Here is an example code to that you can use to achieve high throughput without hitting a ban:
+After every request [rate limits](https://docs.bitvavo.com/#section/Rate-limiting) are remembered, and can be subsequentially acquired by following method `$bitvavo->getRatelimit($key);`. Key can be one of `limit`, `remaining`, or `resetat`. Here is an example code that you can use to achieve high throughput without hitting a ban:
 
 ```
 function handleRateimiting($bitvavo) {
