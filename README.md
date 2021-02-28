@@ -18,7 +18,7 @@ This is the PHP wrapper for the Bitvavo API. This project can be used to build y
   * Price Ticker        [REST](https://github.com/bitvavo/php-bitvavo-api#get-price-ticker) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-price-ticker-1)
   * Book Ticker         [REST](https://github.com/bitvavo/php-bitvavo-api#get-book-ticker) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-book-ticker-1)
   * 24 Hour Ticker      [REST](https://github.com/bitvavo/php-bitvavo-api#get-24-hour-ticker) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-24-hour-ticker-1)
-* Private 
+* Private
   * Place Order         [REST](https://github.com/bitvavo/php-bitvavo-api#place-order) [Websocket](https://github.com/bitvavo/php-bitvavo-api#place-order-1)
   * Update Order        [REST](https://github.com/bitvavo/php-bitvavo-api#update-order) [Websocket](https://github.com/bitvavo/php-bitvavo-api#update-order-1)
   * Get Order           [REST](https://github.com/bitvavo/php-bitvavo-api#get-order) [Websocket](https://github.com/bitvavo/php-bitvavo-api#get-order-1)
@@ -66,7 +66,7 @@ The API key and secret are required for private calls and optional for public ca
 require_once('bitvavo.php');
 
 $bitvavo = new Bitvavo([
-  "APIKEY" => "<APIKEY>", 
+  "APIKEY" => "<APIKEY>",
   "APISECRET" => "<APISECRET>",
   "RESTURL" => "https://api.bitvavo.com/v2",
   "WSURL" => "wss://ws.bitvavo.com/v2/",
@@ -2006,7 +2006,7 @@ Cancels all orders in a market. If no market is specified, all orders of an acco
 // options: market
 $websock->cancelOrders(["market" => "BTC-EUR"], function($response) {
   foreach ($response as $deletion) {
-    echo json_encode($deletion) . "\n"; 
+    echo json_encode($deletion) . "\n";
   }
 });
 ```
