@@ -126,7 +126,53 @@ class Bitvavo {
       curl_setopt($curl, CURLOPT_URL, $url);
     }
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+
     return $curl;
+  }
+
+  function processRatelimit($header) {
+
+    $this->ratelimit = [];
+
+    $header = explode("\n", $header);
+    $header = array_map(function($line) {return trim($line);}, $header);
+    foreach ($header as $h) {
+      if (preg_match('/^bitvavo-ratelimit-(limit|remaining|resetat): +(\d+)$/', $h, $match)) {
+        list(, $key, $value) = $match;
+        $this->ratelimit[$key] = (int) $value;
+      }
+    }
+  }
+
+  function getRatelimit($key) {
+
+    if (!in_array($key, ['limit', 'remaining', 'resetat'])) {
+      errorToConsole("Invalid key ($key). Accepted valueas are: limit, remaining, resetat.\n");
+      return;
+    }
+
+    // No request has been performed.
+    if (empty($this->ratelimit)) {
+      return;
+    }
+
+    // API has changed or is broken.
+    if (!array_key_exists($key, $this->ratelimit)) {
+      return;
+    }
+
+    return $this->ratelimit[$key];
+  }
+
+  function execCurl($curl) {
+    $response = curl_exec($curl);
+    $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+    $header = substr($response, 0, $header_size);
+    $this->processRatelimit($header);
+    $body = substr($response, $header_size);
+    $json = json_decode($body, true);
+    return $json;
   }
 
   function sendPublic($url, $params, $method, $data) {
@@ -150,9 +196,7 @@ class Bitvavo {
       );
       curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     }
-    $output = curl_exec($curl);
-    $json = json_decode($output, true);
-    return $json;
+    return $this->execCurl($curl);
   }
 
   function sendPrivate($endpoint, $params, $body, $method, $apiSecret, $base, $apiKey) {
@@ -180,9 +224,7 @@ class Bitvavo {
       curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
       curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body));
     }
-    $output = curl_exec($curl);
-    $json = json_decode($output, true);
-    return $json;
+    return $this->execCurl($curl);
   }
 
   public function time() {
@@ -361,7 +403,7 @@ function sortAndInsert($update, $book, $sortFunc) {
 }
 
 class Websocket {
-  public function __construct($bitvavo = null, $reconnect = false, $publicCommandArray, $privateCommandArray, $oldSocket) {
+  public function __construct($bitvavo, $reconnect, $publicCommandArray, $privateCommandArray, $oldSocket) {
     $this->parent = $bitvavo;
     $this->wsurl = $bitvavo->wsurl;
     $this->apiKey = $bitvavo->apiKey;
@@ -837,5 +879,3 @@ class Websocket {
     $this->sendPublic(["action" => "getBook", "market" => $market]);
   }
 }
-
-?>
