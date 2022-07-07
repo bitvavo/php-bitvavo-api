@@ -142,11 +142,11 @@ class Bitvavo {
       }
       $sig = createSignature($now, $method, $endpointParams, [], $this->apiSecret);
       $headers = array(
-        'Bitvavo-Access-Key: ' . $this->apiKey,
-        'Bitvavo-Access-Signature: ' . $sig,
-        'Bitvavo-Access-Timestamp: ' . (string)$now,
-        'Bitvavo-Access-Window: ' . (string)$this->accessWindow,
-        'Content-Type: application/json'
+        'bitvavo-access-key: ' . $this->apiKey,
+        'bitvavo-access-signature: ' . $sig,
+        'bitvavo-access-timestamp: ' . (string)$now,
+        'bitvavo-access-window: ' . (string)$this->accessWindow,
+        'content-type: application/json'
       );
       curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     }
@@ -166,11 +166,11 @@ class Bitvavo {
     $sig = createSignature($now, $method, $endpointParams, $body, $apiSecret);
     $curl = $this->createCurl($base . $endpoint, $method, $params);
     $headers = array(
-      'Bitvavo-Access-Key: ' . $apiKey,
-      'Bitvavo-Access-Signature: ' . $sig,
-      'Bitvavo-Access-Timestamp: ' . (string)$now,
-      'Bitvavo-Access-Window: ' . (string)$this->accessWindow,
-      'Content-Type: application/json'
+      'bitvavo-access-key: ' . $apiKey,
+      'bitvavo-access-signature: ' . $sig,
+      'bitvavo-access-timestamp: ' . (string)$now,
+      'bitvavo-access-window: ' . (string)$this->accessWindow,
+      'content-type: application/json'
     );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     if($method == "POST") {
